@@ -1,20 +1,19 @@
 #include "text.h"
 
-/********************************************************************
-name: Chris VanDoodewaard
-student ID#: 1053471
-uoguelp email: cvandood@uoguelph.ca
+/******************************************************************************
+Author: Chris VanDoodewaard
+Last Edit: January 10, 2020
 
 This file contains the required functions for assignment 2. It has the 
 functionality to read in a text file, search the file, copy a section
 of the file, sort the file and remove repeating words from the file.
-********************************************************************/
+******************************************************************************/
 
-/*
+/******************************************************************************
 This function parses the input file, creating a linked list containing
-individual words. A pointer to the beginning of the linked list is 
-returned.
-*/
+individual words. The input file is expected to be a text file. A pointer to the 
+beginning of the linked list is returned.
+******************************************************************************/
 struct node_struct *txt2words(FILE *fp) {
   int j = 0;
   int len = 0;
@@ -61,11 +60,11 @@ struct node_struct *txt2words(FILE *fp) {
   return head;
 }
 
-/*
-This function prints out a linked list, formatting the text 
-to not exceed 80 characters per line, and retaining all other 
+/******************************************************************************
+This function prints out the linked list created by parsing the text file. It
+formats the text to not exceed 80 characters per line, and retains all other
 original formatting.
-*/
+******************************************************************************/
 void ftext(FILE *fp, struct node_struct *list) {
   int wordType;
   int nextWordType;
@@ -127,7 +126,15 @@ void ftext(FILE *fp, struct node_struct *list) {
   }
 }
 
-/*a helper function that defines the type of word*/
+/******************************************************************************
+This is a helper function used to determine the type of word. For this 
+assignment, simplifying assumptions were made so that a "word" is a continuous 
+string of characters and/or numbers. A word could contain a hyphen but a double 
+hypen is considered a unique word as is any other type of punctuation. Words 
+are deliminated by whitespaces, tabs, newlines or punctuation.
+
+This function returns a numerical value from 1-5 indicating the type of word.
+******************************************************************************/
 int charType (char * myChar) {
   char nextChar;
   char doubleNextChar;
@@ -170,7 +177,8 @@ int charType (char * myChar) {
 The purpose of this function is to take a double pointer (this should be a
 sentence) and will return a malloced string containing the first word of the
 input string. The double pointer will be incremented to point to the next word
-in the sentence.
+in the sentence. This function enables a large text file to be parsed without
+loading the entire file into memory.
 *******************************************************************************/
 char *get_word(char **inputString, int *j) {
   #ifdef ERROR1
@@ -315,14 +323,13 @@ char *get_word(char **inputString, int *j) {
   *inputString = *inputString + i;
   *j = *j + i;
 
-  #ifdef ERROR1
-    printf("j: %d\n", *j);
-  #endif
   return word;
 }
 
-/*This function searches throught the linked list looking for values matching target and
-returns a shallow copy of the matching values in a linked list*/
+/*******************************************************************************
+This function searches throught the linked list looking for values matching target and
+returns a shallow copy of the matching values in a linked list
+*******************************************************************************/
 struct node_struct *search(struct node_struct *list, char *target, int(*compar)(const void *, const void *)){
   struct node_struct *head, **ptr;
   int compVal = -1;
@@ -368,8 +375,10 @@ struct node_struct *search(struct node_struct *list, char *target, int(*compar)(
   return head;
 }
 
-/*this function accepts a start and end parameter and iterates through the linked list
-creating a copy beginning at the start pointer and continuing to the end pointer*/
+/*******************************************************************************
+this function accepts a start and end parameter and iterates through the linked list
+creating a copy beginning at the start pointer and continuing to the end pointer
+*******************************************************************************/
 struct node_struct *copy(struct node_struct *start, struct node_struct *end)
 {
   /* int i = 0; */
@@ -400,8 +409,13 @@ struct node_struct *copy(struct node_struct *start, struct node_struct *end)
   return head;
 }
 
-/*this is the sort function, it has 3 helper functions, split, alternate, mini_sort and 
-uses a merge sort algorithm to sort a linked list*/
+/******************************************************************************* 
+this is the sort function, it has 3 helper functions, split, alternate, mini_sort and 
+uses a merge sort algorithm to sort a linked list
+It accepts a pointer to the linked list as well as a comparison function as 
+parameters. 
+Returns a sorted list.
+*******************************************************************************/
 struct node_struct *sort(struct node_struct *list, int(*compar)(const void *, const void *)) {
   int section = 1;
   struct node_struct *myLists[2];
@@ -424,7 +438,9 @@ struct node_struct *sort(struct node_struct *list, int(*compar)(const void *, co
   }
 }
 
-/*this function splits a linked list into two equal lists*/
+/*******************************************************************************
+this function splits a linked list into two equal lists
+*******************************************************************************/
 void split(struct node_struct * mainList, struct node_struct *split[2]) {
   struct node_struct **temp1, **temp2;
   struct node_struct *head1, *head2;
@@ -464,7 +480,11 @@ void split(struct node_struct * mainList, struct node_struct *split[2]) {
   /* printf("split: mallocs: %d\n", mallocs);    */
 }
 
-/*this function takes two inputs lists and sorts numPop items from each list, creating two new sorted output lists*/
+/*******************************************************************************
+this function takes two inputs lists and sorts n items from each list, 
+creating two new sorted output lists.
+This function returns a pointer to the sorted list.
+*******************************************************************************/
 struct queue *mini_sort(struct node_struct **listA, struct node_struct **listB, int numPop, int (*compar)(const void *, const void *))
 {
   struct node_struct *head, **sortList;
@@ -519,7 +539,10 @@ struct queue *mini_sort(struct node_struct **listA, struct node_struct **listB, 
   return sort;
 }
 
-/*this function takes the partially sorted lists from mini_sort and combines them back into one list until the two lists are completely sorted*/
+/*******************************************************************************   
+this function takes the partially sorted lists from mini_sort and combines them 
+back into one list until the two lists are completely sorted.
+*******************************************************************************/
 void alternate(struct node_struct *result[2], struct node_struct **listA, struct node_struct **listB, int target, int (*compar)(const void *, const void *))
 {
   struct queue sortArray[2]; 
@@ -555,7 +578,12 @@ void alternate(struct node_struct *result[2], struct node_struct **listA, struct
   result[1] = (sortArray + 1)->head;
 }
 
-/*this function removes all repeating words from the inputted list*/
+/*******************************************************************************
+this function removes all repeating words from the inputted list. First the list
+is sorted, then the list is passed to this function, which compares each word 
+with the word beside it and if they are equal, it removes that word and proceeds
+until all duplicate words are removed. 
+*******************************************************************************/
 void remove_repeats(struct node_struct *list, int(*compar)(const void *, const void *)) {
   int comp;
   struct node_struct * temp;
@@ -576,7 +604,9 @@ void remove_repeats(struct node_struct *list, int(*compar)(const void *, const v
 
 }
 
-/*this returns the length of an inputted list*/
+/*******************************************************************************
+this returns the length of an inputted list
+*******************************************************************************/
 int length(struct node_struct *list) {
   int i = 0;
 
@@ -587,7 +617,9 @@ int length(struct node_struct *list) {
   return i;
 }
 
-/*this frees the list*/
+/*******************************************************************************
+this frees the list
+*******************************************************************************/
 void free_list(struct node_struct *list, int free_data) {
   struct node_struct *temp;
   /* int frees = 0; */
@@ -606,6 +638,5 @@ void free_list(struct node_struct *list, int free_data) {
     /* i++;
     printf("i: %d\n", i); */
   }
-
   /* printf("free_list: frees: %d\n", frees);*/
 } 

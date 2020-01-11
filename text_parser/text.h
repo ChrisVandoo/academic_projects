@@ -1,9 +1,8 @@
 /********************************************************************
-name: Chris VanDoodewaard
-student ID#: 1053471
-uoguelp email: cvandood@uoguelph.ca
+Author: Chris VanDoodewaard
+Last Edit: January 10, 2020
 
-This file contains the header functions for assignment 2. 
+This file contains the header functions for the text_parser program.
 ********************************************************************/
 
 #ifndef __DEFT__
@@ -24,7 +23,10 @@ struct queue {
   struct node_struct **tail;
 };
 
+
+/* function prototypes for text.c */
 struct node_struct *txt2words(FILE *fp);
+
 char *get_word(char **inputString, int *j);
 
 struct node_struct *search(struct node_struct *list, char *target, int(*compar)(const void *, const void *));
