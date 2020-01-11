@@ -30,8 +30,6 @@
     This project was graded using an automated testing suite, hence the lack of 
     a main(), and other user interface related functionality.
 
-    I have included a test main() function used during development of this 
-    project to illustrate this projects capabilities. Due to time constraints, 
-    simplifying assumptions were made about what a word is as well as 
-    reproducing the formatting of the text document (this was outlined in the
-    assignment requirements). 
+    Due to time constraints, simplifying assumptions were made about what a word 
+    is as well as reproducing the formatting of the text document (this was 
+    outlined in the assignment requirements).
